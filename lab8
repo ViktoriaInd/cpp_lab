@@ -1,0 +1,77 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+template<typename T>
+class Vector {
+    public:
+    T* data;
+    int size;
+    int N;
+    Vector() : size(0), data(new T [N]()) {
+
+    }
+    Vector(int N) : size(0), N(N), data(new T [N]()) {
+
+    }
+    Vector(int N, int number) : size(N), N(N), data(new T [N]()) {
+        for (int i = 0; i < size; i++) {
+            data[i] = number;
+        }
+    }
+    
+    
+    void push_back(T value) {
+        T _data[size + 1];
+        for (int i = 0; i < size; i++) {
+            _data[i] = data[i];
+        }
+        _data[size] = value;
+        for (int i = 0; i < size + 1; i++) {
+            data[i] = _data[i];
+        }
+        size = size + 1;
+    }
+    
+    void pop_back() {
+        for (int i = 0; i < size - 1; i++) {
+            data[i] = data[i];
+        }
+        size = size - 1;
+    }
+    
+    int size_of() {
+        return size;
+    }
+    void empty() {
+        if (size == 0) {
+            cout << "Вектор пустой";
+        }
+    }
+    
+    T operator[](int index) {
+        return data[index];
+    }
+};
+
+template<typename T>
+ostream& operator << (ostream &out, const Vector<T> &vector) {
+    for (int i = 0; i < vector.size; i++){
+        out << vector.data[i] << " ";
+    }
+     
+    return out;
+}
+
+int main() {
+    Vector<char> v = Vector<char>(5, 'a');
+    v.pop_back();
+    v.push_back('b');
+    v.push_back('c');
+    cout << v;
+    cout << "\n";
+    cout << "Размер вектора:" << v.size_of() << endl;
+    cout << "Элемент по индексу:" << v[4];
+    return 0;
+}
