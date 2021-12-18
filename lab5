@@ -1,0 +1,137 @@
+#include <stdio.h>
+#include <iostream>
+#include <cmath>
+#include <time.h>
+using namespace std;
+
+class Figure{
+    protected:
+        int quantity_sides;
+        double* side_lengths;
+    public:
+        Figure(int quantity_sides, double *array) {
+            side_lengths = new double[quantity_sides];
+        };
+                
+        double perimeterFigure(int size, double *array){
+            double sum_parties = 0;
+            for(int i = 0; i < size; i++) {
+                side_lengths[i] = array[i]; 
+                sum_parties += side_lengths[i];
+            }
+            cout << "Периметр: " << sum_parties << endl;
+            return sum_parties;
+        }
+                
+        double areaCircle(int size, double *array){
+            double area_circle = 0;
+            double pi = 3.1415926535;
+            for(int i = 0; i < size; i++) {
+                side_lengths[i] = array[i]; 
+                area_circle = side_lengths[i] * side_lengths[i] / 4 / pi;
+            }
+            cout << "Площадь: " << area_circle << endl;
+            return area_circle;
+        }
+                
+        double areaPolygon(int size, double *array){
+            double area_polygon = 0;
+            double pi = 3.1415926535;
+            for(int i = 0; i < size; i++) {
+                side_lengths[i] = array[i]; 
+                area_polygon = size * side_lengths[i] * side_lengths[i] / 4 / tan (pi / size);
+            }
+            cout << "Площадь: " << area_polygon << endl;
+            return area_polygon;
+        }
+            
+    virtual ~Figure() {
+        delete []side_lengths;
+    }
+};
+
+class Circle: public Figure{
+    public:
+        Circle(int quantity_sides, double *array):
+        Figure(quantity_sides, side_lengths) {
+        }
+    
+    void information(){
+        cout << "\nКруг" << endl;
+    }
+};
+    
+class Polygon: public Figure{
+    public:
+        Polygon(int quantity_sides, double *array):
+        Figure(quantity_sides, side_lengths){
+        }
+    
+    void information(){
+        cout << "\nМногоугольник " << endl;
+    }
+};
+
+
+class Notebook {
+    private:
+        int n;
+        int quantity_sides;
+        double* side_lengths;
+        int left_border_1 = 1;
+        int right_border_1 = 6;
+        double left_border_2 = 1.0;
+        double right_border_2 = 10.0;
+        
+        int generation(int n, int size, double* number, int a, int b, double c, double d) {
+            srand(time(NULL));
+            number = new double[size];
+            for (int i = 0; i < n; i++) {
+                double _number = c + (d - c) / RAND_MAX * rand();
+                size = a + rand() % (b - a + 1);
+                for (int j = 0; j < size; j++){
+                    number[j] = _number;
+                }
+                
+                Figure figure = Figure(size, number);
+                Circle circle = Circle(size, number);
+                Polygon polygon = Polygon(size, number);
+                if (size == 1){
+                    circle.information();
+                    cout << "Количество сторон:" << size << endl;
+                    figure.perimeterFigure(size, number); 
+                    figure.areaCircle(size, number);
+                }
+                if (size == 2){
+                    cout << "\nКоличество сторон:" << size << endl;
+                    cout << "Фигуры не существует" << endl;
+                }
+                if (size > 2){
+                    polygon.information();
+                    cout << "Количество сторон:" << size << endl;
+                    figure.perimeterFigure(size, number); 
+                    figure.areaPolygon(size, number);
+                }
+            }
+            
+            for (int i = 0; i < n; i++) {
+                delete[] number;
+            }
+            
+            return 0;
+        };
+        
+    public:
+        Notebook(int n){
+            generation(n, quantity_sides, side_lengths, left_border_1, right_border_1, left_border_2, right_border_2);
+    }
+};
+
+int main(){
+    int n;
+    cout << "Количество фигур" << endl;
+    cin >> n;
+    Notebook notebook = Notebook(n);
+    return 0;
+}
+
