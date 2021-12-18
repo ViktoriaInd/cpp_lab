@@ -1,0 +1,45 @@
+#include <iostream>
+using namespace std;
+struct ComplexNumber //Структура позволяет сгруппировать переменные разных типов в единое целое
+{
+    double real_part;
+    double imaginary_part;
+};
+
+ComplexNumber summForArray(ComplexNumber number[], int size) {
+    double summ_real_part = 0;
+    double summ_imaginary_part = 0;
+    for (int i = 0; i < size; i++){
+        summ_real_part += number[i].real_part;
+        summ_imaginary_part += number[i].imaginary_part;
+    }
+    ComplexNumber Summ = {summ_real_part, summ_imaginary_part};
+    cout << summ_real_part << "+i" << summ_imaginary_part;
+    return  Summ;
+}
+
+
+int summForArray(int array[], int size){
+    int summ = 0;
+    for (int i = 0; i < size; i++){
+        summ += array[i];
+    }
+    return summ;
+}
+
+int main()
+{
+    //создание массива
+    ComplexNumber number[7];
+    //заполнение массива
+    number[0] = { 1.5, 5.63 };
+    number[1] = { 1.9, 7.82 };
+    number[2] = { 6.8, 9.12};
+    number[3] = { 3.7, 2.16 };
+    number[4] = { 8.4, 2.35 };
+    number[5] = { 7.1, 1.89 };
+    number[6] = { 5.9, 6.21};
+    
+    summForArray(number, 7);
+}
+
