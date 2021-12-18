@@ -1,0 +1,260 @@
+#include <time.h>
+#include <iostream>
+#include <deque>
+
+using namespace std;
+
+class Visitors {
+    public:
+        int probability_of_occurrence, duration_of_the_visit, probability_of_prerecording;
+        Visitors(){}
+        ~Visitors(){}
+};
+
+class Child : public Visitors {
+    public:
+        Child() {
+            this->probability_of_occurrence = 5;
+            this->duration_of_the_visit = 5 + rand() % 10;
+            this->probability_of_prerecording = 10;
+        }
+        ~Child() {}
+};
+
+class Adult : public Visitors {
+    public:
+        Adult() {
+            this->probability_of_occurrence = 40;
+            this->duration_of_the_visit = 2 + rand() % 5;
+            this->probability_of_prerecording = 70;   
+        }
+        ~Adult() {}    
+};
+
+class Old : public Visitors {
+    public:
+        Old() {
+            this->probability_of_occurrence = 30;
+            this->duration_of_the_visit = 7 + rand() % 9;
+            this->probability_of_prerecording = 5;  
+        }
+        ~Old() {}
+}; 
+
+
+class Queue {
+    public:
+        int count_of_new_visitor = 1 + rand() % 10;
+    	    deque<Visitors*> live_queue;
+    	    deque<Visitors*> prerecording_queue;
+    	    Visitors* visitors = new Visitors;
+    	    int count_of_new_child, count_of_new_adult, count_of_new_old, count_of_passed, count_of_passed_child, count_of_passed_adult, count_of_passed_old, vector_size, timer_for_child, timer_for_adult, timer_for_old;
+    	Queue() {
+    	    
+    	}
+	void beginning() {
+	    int temp = (0 + rand() % (2 - 0 + 1));
+	    int chance_of_prerecording_child = 0 + rand() % 100;
+    	int chance_of_prerecording_adult = 0 + rand() % 100;
+    	int chance_of_prerecording_old = 0 + rand() % 100;
+        if (temp == 0){
+            if (chance_of_prerecording_child < 10) {
+    			prerecording_queue.push_back(new Child);
+    		}
+    		else {
+    		    live_queue.push_back(new Child);
+    		}
+        	count_of_new_child ++; 
+        }
+        if (temp == 1){
+        	if (chance_of_prerecording_adult < 70) {
+    			prerecording_queue.push_back(new Adult);
+    		}
+    		else {
+    		    live_queue.push_back(new Adult);
+    		}
+        	count_of_new_adult++; 
+        }
+        if (temp == 2){
+        	if (chance_of_prerecording_old < 5) {
+    			prerecording_queue.push_back(new Old);
+    		}
+    		else {
+    		    live_queue.push_back(new Old);
+    		}
+        	count_of_new_old++; 
+        }
+    }
+
+    void add_visitor(bool prerecording_setting)
+    {
+    	int chance_of_prerecording_child = 0 + rand() % 100;
+    	int chance_of_prerecording_adult = 0 + rand() % 100;
+    	int chance_of_prerecording_old = 0 + rand() % 100;
+    	int chance_of_probability_of_occurence_child = 0 + rand() % 100;
+    	int chance_of_probability_of_occurence_adult = 0 + rand() % 100;
+    	int chance_of_probability_of_occurence_old = 0 + rand() % 100;
+    
+    	if (chance_of_probability_of_occurence_child < 5) {
+    		count_of_new_child++;
+    		    	if (prerecording_setting == true) {
+    		if (chance_of_prerecording_child < 10) {
+    			prerecording_queue.push_back(new Child);
+    		}
+    		else {
+    		    live_queue.push_back(new Child);
+    		}
+    	}
+    	}
+    	if (chance_of_probability_of_occurence_adult < 40) {
+    		count_of_new_adult++;
+    		    	if (prerecording_setting == true) {
+    		if (chance_of_prerecording_adult < 70) {
+    			prerecording_queue.push_back(new Adult);
+    		}
+    		else {
+    		    live_queue.push_back(new Adult);
+    		}
+    	}
+    	if (chance_of_probability_of_occurence_old < 30) {
+    		count_of_new_old++;
+    		    	if (prerecording_setting == true) {
+    		if (chance_of_prerecording_old < 5) {
+    			prerecording_queue.push_back(new Old);
+    		}
+    		else {
+    		    live_queue.push_back(new Old);
+    		}
+    	}
+    	}
+    	
+        count_of_new_visitor = count_of_new_child + count_of_new_adult + count_of_new_old;
+    	}
+    }
+    
+
+    
+    void delete_visitor(int timer_for_visit)
+    {
+    	string name = typeid(*visitors).name();
+    	if (name == "class Child")
+    	{
+    		count_of_passed_child++;
+    		timer_for_child += timer_for_visit;
+    	}
+    	if (name == "class Adult")
+    	{
+    		count_of_passed_adult++;
+    		timer_for_adult += timer_for_visit;
+    	}
+    	if (name == "class Old")
+    	{
+    		count_of_passed_old++;
+    		timer_for_old += timer_for_visit;
+    	}
+    
+    	count_of_passed = count_of_passed_child + count_of_passed_adult + count_of_passed_old;
+    }
+};
+
+class Division {
+    public:
+    int minute = 1;
+	int hour = 60;
+	int opening_hours = 480;
+	int time_of_end = hour * 18;
+	int timer_of_minute = 0;
+	int timer_of_begin = hour * 9;
+	int timer_of_hour = hour * 9;
+	int timer_for_visit = 0;
+	bool reception = true;
+	bool prerecording = true;
+	bool prerecording_setting = true;
+	Queue queue;
+	
+	Division() {
+    	for (int i = 0; i < queue.count_of_new_visitor; i++) {
+    		queue.beginning();
+    	}
+    }
+
+    ~Division() {
+    }
+
+    void work() {
+    	while (timer_of_hour <= time_of_end) {
+    		if (timer_of_minute == hour) {
+    			timer_of_hour += hour;
+    			timer_of_minute = 0;
+    		}
+    		if (timer_of_minute % 10 == 0) {
+    	
+    			if (prerecording == true) {
+    				prerecording_setting = true;
+    			}
+    			else {
+    				prerecording_setting = false;
+    			}
+    			queue.add_visitor(prerecording_setting);
+    		}
+    
+    		if ((timer_of_hour >= 780) && (timer_of_hour <= 840) && (timer_for_visit == 0)) {
+    			reception = false;
+    			prerecording = false;
+    		}
+    		else {
+    			reception = true;
+    		}
+    		
+    		if (reception == true) {
+    		    if ((queue.live_queue.size() != 0) || (queue.prerecording_queue.size() != 0)) {
+    			    timer_for_visit++;
+    		    }
+    		}
+    				
+    		if (reception == true) {
+    		    if ((queue.live_queue.size() != 0) || (queue.prerecording_queue.size() != 0)) {
+    		         if ((queue.live_queue[0]->duration_of_the_visit == timer_for_visit) || (queue.prerecording_queue[0]->duration_of_the_visit == timer_for_visit)) {
+            			timer_for_visit = 0;
+            			queue.delete_visitor(timer_for_visit);
+    		         }
+    		    }
+    		}
+    
+    		if (timer_of_hour >= time_of_end) {
+    		    reception = false;
+    			timer_for_visit = 0;
+    		}
+    
+    		if ((reception == false) && (timer_of_hour >= time_of_end)) {
+    			statistics();
+    			break;
+    		}
+    		
+    		timer_of_minute++;
+    	}
+    }
+
+    void statistics() {
+        cout << "Было посетителей: " << queue.count_of_new_visitor << endl;
+        cout << "Успело пройти: " << queue.count_of_passed << endl;
+        cout << "Было детей: " << queue.count_of_new_child << endl;
+        cout << "Успело пройти детей: " << queue.count_of_passed_child << endl;
+        cout << "Было взрослых: " << queue.count_of_new_adult << endl;
+        cout << "Успело пройти взрослых: " << queue.count_of_passed_adult << endl;
+        cout << "Было стариков: " << queue.count_of_new_old << endl;
+        cout << "Успело пройти стариков: " << queue.count_of_passed_old << endl;
+        cout << "Время, потраченное на детей: " << queue.timer_for_child << endl;
+        cout << "Время, потраченное на взрослых: " << queue.timer_for_adult << endl;
+        cout << "Время, потраченное на стариков: " << queue.timer_for_old << endl;
+    	
+    }
+};
+
+int main() {
+    srand(time(0));
+    Division division;
+
+        division.work();
+}
+
