@@ -1,0 +1,88 @@
+#include <iostream>
+
+using namespace std;
+
+class Gun {
+    public:
+    double damage;
+    double attack_speed;
+    
+    Gun(double _damage, double _attack_speed) {
+        damage = _damage;
+        attack_speed = _attack_speed;
+    }
+    
+    void attack() {
+        cout << "Пистолет наносит урон " << damage << endl;
+    }
+    
+    void calculationsDamagePerMinutes() {
+        cout << "Урон пистолета в минуту = " << damage * attack_speed * 60 << endl;
+    }
+    
+    void increase() {
+        double a = -10.0;
+        double b = 10.0;
+        int n = 0;
+        n = 1 + rand() % (2 - 1 + 1);
+        if (n == 1){
+            damage = damage + (double)rand()/RAND_MAX * (b - a) + a;
+            cout << "Урон изменился до " << damage << endl;
+        }
+        else {
+            attack_speed = damage * attack_speed * 60 + (double)rand()/RAND_MAX * (b - a) + a;
+            cout << "Скорость атаки изменилась до " << attack_speed << endl;    
+        }
+    }    
+};
+
+class Sword {
+    public:
+    double damage;
+    double attack_speed;
+    
+    Sword(double _damage, double _attack_speed) {
+        damage = _damage;
+        attack_speed = _attack_speed;
+    }
+    
+    void attack() {
+        cout << "Меч наносит урон " << damage << endl; 
+    }
+    
+    void calculationsDamagePerMinutes() {
+        cout << "Урон меча в минуту = " << damage * attack_speed * 60 << endl;
+    }
+    
+    void increase() {
+        double a = -10.0;
+        double b = 10.0;
+        int n = 0;
+        n = 1 + rand() % (2 - 1 + 1);
+        if (n == 1){
+            damage = damage + (double)rand()/RAND_MAX * (b - a) + a;
+            cout << "Урон изменился до " << damage << endl;
+        }
+        else {
+            attack_speed = damage * attack_speed * 60 + (double)rand()/RAND_MAX * (b - a) + a;
+            cout << "Скорость атаки изменилась до " << attack_speed << endl;    
+        }
+    }
+    
+};
+
+
+int main()
+{
+    srand(time(NULL));
+    Gun gun1 = Gun(40.0, 1.0);
+    gun1.attack();
+    gun1.calculationsDamagePerMinutes();
+    gun1.increase();
+    
+    Sword sword1 = Sword(5.0, 4.0);
+    sword1.attack();
+    sword1.calculationsDamagePerMinutes();
+    sword1.increase();
+}
+
